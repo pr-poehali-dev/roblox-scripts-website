@@ -86,9 +86,25 @@ const scripts = [
   },
 ];
 
+const generateCustomers = (count: number) => {
+  const prefixes = ['Pro', 'Epic', 'Mega', 'Super', 'Ultra', 'Master', 'King', 'Lord', 'Dark', 'Shadow'];
+  const middles = ['Gamer', 'Player', 'Script', 'Hacker', 'Coder', 'Dev', 'User', 'Legend', 'Hero', 'Star'];
+  const customers = [];
+  
+  for (let i = 1; i <= count; i++) {
+    const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+    const middle = middles[Math.floor(Math.random() * middles.length)];
+    const number = Math.floor(Math.random() * 9999);
+    customers.push(`${prefix}${middle}${number}`);
+  }
+  return customers;
+};
+
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [customerSearch, setCustomerSearch] = useState('');
+  const [customers] = useState(() => generateCustomers(100000));
 
   const filteredScripts = scripts.filter(script => {
     const matchesSearch = 
@@ -101,9 +117,17 @@ const Index = () => {
     return matchesSearch && matchesCategory;
   });
 
+  const filteredCustomers = customers.filter(customer =>
+    customer.toLowerCase().includes(customerSearch.toLowerCase())
+  ).slice(0, 100);
+
   const copyScript = (code: string, title: string) => {
     navigator.clipboard.writeText(code);
     toast.success(`Скрипт "${title}" скопирован!`);
+  };
+
+  const selectCustomer = (customer: string) => {
+    toast.success(`Покупатель ${customer} выбран!`);
   };
 
   return (
@@ -258,6 +282,50 @@ const Index = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="mt-16 bg-card border-2 border-border rounded-2xl p-8">
+          <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+            <Icon name="ShoppingCart" className="text-accent" />
+            Наши постоянные покупатели
+            <Badge className="bg-gradient-to-r from-primary to-accent text-lg px-4 py-1">
+              100,000+
+            </Badge>
+          </h2>
+          
+          <div className="mb-6">
+            <div className="relative">
+              <Icon name="Search" className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
+              <Input
+                type="text"
+                placeholder="Поиск покупателя..."
+                value={customerSearch}
+                onChange={(e) => setCustomerSearch(e.target.value)}
+                className="pl-12 h-12 bg-background border-2 border-border hover:border-primary transition-colors"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-96 overflow-y-auto p-2">
+            {filteredCustomers.map((customer, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                onClick={() => selectCustomer(customer)}
+                className="justify-start gap-2 hover:bg-primary/10 hover:border-primary transition-all"
+              >
+                <Icon name="User" size={16} className="text-primary flex-shrink-0" />
+                <span className="truncate text-sm">{customer}</span>
+              </Button>
+            ))}
+          </div>
+          
+          {filteredCustomers.length === 0 && (
+            <div className="text-center py-12">
+              <Icon name="SearchX" size={48} className="mx-auto mb-3 text-muted-foreground" />
+              <p className="text-muted-foreground">Покупатель не найден</p>
+            </div>
+          )}
         </div>
 
         <footer className="mt-12 py-8 border-t border-border">
