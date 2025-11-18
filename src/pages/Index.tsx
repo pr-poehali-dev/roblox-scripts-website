@@ -259,6 +259,12 @@ const Index = () => {
             </div>
           </div>
         </div>
+
+        <footer className="mt-12 text-center py-6 border-t border-border">
+          <p className="text-muted-foreground">
+            Создано <span className="text-primary font-semibold">John_Deo542</span>
+          </p>
+        </footer>
       </div>
     </div>
   );
