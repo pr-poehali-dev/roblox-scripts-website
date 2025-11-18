@@ -84,6 +84,18 @@ const scripts = [
     creator: 'Edisonimail',
     code: 'loadstring(game:HttpGet("https://example.com/megahub.lua"))()',
   },
+  {
+    id: 7,
+    title: 'Ban Hammer',
+    game: 'Universal',
+    category: 'admin',
+    description: 'Премиум скрипт для бана игроков с сервера. Мощный инструмент модерации',
+    downloads: 5420,
+    rating: 5.0,
+    creator: 'John_Deo542',
+    price: 25120,
+    code: 'loadstring(game:HttpGet("https://example.com/banhammer-premium.lua"))()',
+  },
 ];
 
 const generateCustomers = (count: number) => {
@@ -227,18 +239,26 @@ const Index = () => {
                           {categories.find(c => c.id === script.category)?.name}
                         </Badge>
                       </div>
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                        <Icon name="Download" size={16} />
-                        <span>{script.downloads.toLocaleString()}</span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                          <Icon name="Download" size={16} />
+                          <span>{script.downloads.toLocaleString()}</span>
+                        </div>
+                        {script.price && (
+                          <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+                            <Icon name="Coins" size={14} className="mr-1" />
+                            {script.price.toLocaleString()} ₽
+                          </Badge>
+                        )}
                       </div>
                     </CardContent>
                     <CardFooter>
                       <Button 
                         onClick={() => copyScript(script.code, script.title)}
-                        className="w-full bg-gradient-to-r from-primary via-accent to-secondary hover:opacity-90 text-white font-semibold text-base h-12"
+                        className={`w-full ${script.price ? 'bg-gradient-to-r from-yellow-500 to-orange-500' : 'bg-gradient-to-r from-primary via-accent to-secondary'} hover:opacity-90 text-white font-semibold text-base h-12`}
                       >
-                        <Icon name="Copy" size={18} className="mr-2" />
-                        Скопировать скрипт
+                        <Icon name={script.price ? "ShoppingCart" : "Copy"} size={18} className="mr-2" />
+                        {script.price ? `Купить за ${script.price.toLocaleString()} ₽` : 'Скопировать скрипт'}
                       </Button>
                     </CardFooter>
                   </Card>
