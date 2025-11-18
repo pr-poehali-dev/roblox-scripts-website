@@ -260,10 +260,27 @@ const Index = () => {
           </div>
         </div>
 
-        <footer className="mt-12 text-center py-6 border-t border-border">
-          <p className="text-muted-foreground">
-            Создано <span className="text-primary font-semibold">John_Deo542</span>
-          </p>
+        <footer className="mt-12 py-8 border-t border-border">
+          <div className="text-center mb-6">
+            <p className="text-muted-foreground">
+              Создано <span className="text-primary font-semibold">John_Deo542</span>
+            </p>
+          </div>
+          
+          <div className="bg-card border-2 border-border rounded-2xl p-6">
+            <h3 className="text-xl font-bold mb-4 text-center flex items-center justify-center gap-2">
+              <Icon name="Users" className="text-accent" />
+              Помощники в создании сайта
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              {['Zona123900', 'Edisonimail', '1x1x1x1', 'Girf_67', 'Topchic011', 'Nba', 'Cotac', 'ProHacker228', 'DevMaster99', 'ScriptKing'].map((helper, index) => (
+                <div key={index} className="flex items-center gap-2 bg-background/50 rounded-lg px-3 py-2 border border-border hover:border-primary transition-colors">
+                  <Icon name="User" size={16} className="text-primary flex-shrink-0" />
+                  <span className="text-sm font-medium truncate">{helper}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </footer>
       </div>
     </div>
