@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
 
@@ -112,11 +113,22 @@ const generateCustomers = (count: number) => {
   return customers;
 };
 
+const paymentMethods = [
+  { id: 'card', name: 'Банковская карта', icon: 'CreditCard', description: 'Visa, MasterCard, Mir' },
+  { id: 'qiwi', name: 'QIWI', icon: 'Wallet', description: 'Оплата через QIWI кошелёк' },
+  { id: 'yoomoney', name: 'ЮMoney', icon: 'Coins', description: 'Яндекс.Деньги' },
+  { id: 'sbp', name: 'СБП', icon: 'Smartphone', description: 'Система быстрых платежей' },
+  { id: 'crypto', name: 'Криптовалюта', icon: 'Bitcoin', description: 'BTC, ETH, USDT' },
+];
+
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [customerSearch, setCustomerSearch] = useState('');
   const [customers] = useState(() => generateCustomers(100000));
+  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+  const [selectedScript, setSelectedScript] = useState<any>(null);
+  const [selectedPayment, setSelectedPayment] = useState('');
 
   const filteredScripts = scripts.filter(script => {
     const matchesSearch = 
@@ -142,8 +154,85 @@ const Index = () => {
     toast.success(`Покупатель ${customer} выбран!`);
   };
 
+  const handleScriptAction = (script: any) => {
+    if (script.price) {
+      setSelectedScript(script);
+      setPaymentDialogOpen(true);
+    } else {
+      copyScript(script.code, script.title);
+    }
+  };
+
+  const handlePayment = () => {
+    if (!selectedPayment) {
+      toast.error('Выберите способ оплаты');
+      return;
+    }
+    toast.success(`Оплата ${selectedScript.price.toLocaleString()} ₽ через ${paymentMethods.find(p => p.id === selectedPayment)?.name} успешна!`);
+    setTimeout(() => {
+      copyScript(selectedScript.code, selectedScript.title);
+      setPaymentDialogOpen(false);
+      setSelectedPayment('');
+    }, 1500);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-card">
+      <Dialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
+        <DialogContent className="sm:max-w-md bg-card border-2 border-border">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+              <Icon name="ShoppingCart" className="text-primary" />
+              Оплата скрипта
+            </DialogTitle>
+            <DialogDescription>
+              {selectedScript && (
+                <div className="mt-4 p-4 bg-background rounded-lg border border-border">
+                  <p className="font-semibold text-lg text-foreground">{selectedScript.title}</p>
+                  <p className="text-2xl font-bold text-primary mt-2">
+                    {selectedScript.price?.toLocaleString()} ₽
+                  </p>
+                </div>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 mt-4">
+            <h3 className="font-semibold text-foreground">Выберите способ оплаты:</h3>
+            <div className="grid gap-3">
+              {paymentMethods.map(method => (
+                <button
+                  key={method.id}
+                  onClick={() => setSelectedPayment(method.id)}
+                  className={`p-4 rounded-lg border-2 transition-all text-left ${
+                    selectedPayment === method.id
+                      ? 'border-primary bg-primary/10'
+                      : 'border-border hover:border-primary/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon name={method.icon as any} size={24} className="text-primary" />
+                    <div>
+                      <p className="font-semibold text-foreground">{method.name}</p>
+                      <p className="text-sm text-muted-foreground">{method.description}</p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+            
+            <Button
+              onClick={handlePayment}
+              disabled={!selectedPayment}
+              className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:opacity-90 text-white font-semibold h-12"
+            >
+              <Icon name="CreditCard" size={18} className="mr-2" />
+              Оплатить {selectedScript?.price?.toLocaleString()} ₽
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <div className="container mx-auto px-4 py-8">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary via-accent to-secondary p-1 mb-12">
           <div className="relative bg-background/95 backdrop-blur rounded-3xl p-12 text-center">
@@ -254,7 +343,7 @@ const Index = () => {
                     </CardContent>
                     <CardFooter>
                       <Button 
-                        onClick={() => copyScript(script.code, script.title)}
+                        onClick={() => handleScriptAction(script)}
                         className={`w-full ${script.price ? 'bg-gradient-to-r from-yellow-500 to-orange-500' : 'bg-gradient-to-r from-primary via-accent to-secondary'} hover:opacity-90 text-white font-semibold text-base h-12`}
                       >
                         <Icon name={script.price ? "ShoppingCart" : "Copy"} size={18} className="mr-2" />
