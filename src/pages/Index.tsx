@@ -81,7 +81,7 @@ const scripts = [
     description: 'Универсальный GUI со всеми функциями: ESP, Aimbot, Speed, Fly',
     downloads: 31200,
     rating: 4.9,
-    creator: 'John_Deo542',
+    creator: 'Edisonimail',
     code: 'loadstring(game:HttpGet("https://example.com/megahub.lua"))()',
   },
 ];
