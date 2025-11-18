@@ -26,6 +26,7 @@ const scripts = [
     description: 'Показывает всех игроков через стены с отображением здоровья и дистанции',
     downloads: 15420,
     rating: 4.8,
+    creator: 'John_Deo542',
     code: 'loadstring(game:HttpGet("https://example.com/esp.lua"))()',
   },
   {
@@ -36,6 +37,7 @@ const scripts = [
     description: 'Увеличивает скорость передвижения персонажа до 200%',
     downloads: 12340,
     rating: 4.6,
+    creator: 'John_Deo542',
     code: 'loadstring(game:HttpGet("https://example.com/speed.lua"))()',
   },
   {
@@ -46,6 +48,7 @@ const scripts = [
     description: 'Полёт с контролем скорости и высоты. Работает на всех играх',
     downloads: 18950,
     rating: 4.9,
+    creator: 'John_Deo542',
     code: 'loadstring(game:HttpGet("https://example.com/fly.lua"))()',
   },
   {
@@ -56,6 +59,7 @@ const scripts = [
     description: 'Автоприцеливание с настройкой FOV и smoothness для Arsenal',
     downloads: 22100,
     rating: 4.7,
+    creator: 'John_Deo542',
     code: 'loadstring(game:HttpGet("https://example.com/arsenal-aim.lua"))()',
   },
   {
@@ -66,6 +70,7 @@ const scripts = [
     description: 'Полный набор админ команд: kill, teleport, fly, noclip и другие',
     downloads: 9870,
     rating: 4.5,
+    creator: 'John_Deo542',
     code: 'loadstring(game:HttpGet("https://example.com/admin.lua"))()',
   },
   {
@@ -76,6 +81,7 @@ const scripts = [
     description: 'Универсальный GUI со всеми функциями: ESP, Aimbot, Speed, Fly',
     downloads: 31200,
     rating: 4.9,
+    creator: 'John_Deo542',
     code: 'loadstring(game:HttpGet("https://example.com/megahub.lua"))()',
   },
 ];
@@ -188,14 +194,18 @@ const Index = () => {
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
                         <div className="flex items-center gap-1">
-                          <Icon name="Download" size={16} />
-                          <span>{script.downloads.toLocaleString()}</span>
+                          <Icon name="User" size={16} className="text-primary" />
+                          <span className="font-medium text-foreground">{script.creator}</span>
                         </div>
                         <Badge variant="outline" className="capitalize">
                           {categories.find(c => c.id === script.category)?.name}
                         </Badge>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <Icon name="Download" size={16} />
+                        <span>{script.downloads.toLocaleString()}</span>
                       </div>
                     </CardContent>
                     <CardFooter>
